@@ -1,5 +1,5 @@
-#ifndef INC_CPPNAMEOF_H_
-#define INC_CPPNAMEOF_H_
+#pragma once
+#include "CoreMinimal.h"
 #include <type_traits>
 #include <utility>
 #include <string_view>
@@ -17,8 +17,21 @@ using nameof_enum_enabled = std::true_type;
 #    ifndef CPPNAMEOF_ENUM_MAX
 #        define CPPNAMEOF_ENUM_MAX (255)
 #    endif
+
+#    ifndef CPPNAMEOF_BUFFER_SIZE
+#        define CPPNAMEOF_BUFFER_SIZE (64)
+#    endif
 #else
+#    ifndef CPPNAMEOF_ENABLED
+#        undef CPPNAMEOF_ENABLED
+#    endif
 #    define CPPNAMEOF_ENABLED (0)
+
+#    ifndef CPPNAMEOF_BUFFER_SIZE
+#        undef CPPNAMEOF_BUFFER_SIZE
+#    endif
+#    define CPPNAMEOF_BUFFER_SIZE (0)
+
 using nameof_enum_enabled = std::false_type;
 #endif
 
@@ -144,5 +157,37 @@ string_viewascii get_enum_name(T x)
     return get_enum_name_<T, CPPNAMEOF_ENUM_MIN, CPPNAMEOF_ENUM_MAX>(x);
 }
 
+template<class T, class U>
+const T* to_utf8(int32_t size, const U* str);
+
+template<>
+const char* to_utf8<char, char>(int32_t size, const char* str);
+
+template<>
+const unsigned char* to_utf8<unsigned char, char>(int32_t size, const char* str);
+
+template<>
+const char16_t* to_utf8<char16_t, char>(int32_t size, const char* str);
+
+template<>
+const char32_t* to_utf8<char32_t, char>(int32_t size, const char* str);
+
+template<>
+const wchar_t* to_utf8<wchar_t, char>(int32_t size, const char* str);
+
+template <class T, int32_t Min, int32_t Max>
+const TCHAR* get_enum_name_tchar_(T x)
+{
+    string_viewascii view = get_enum_name_<T, Min, Max>(x);
+    return to_utf8<TCHAR, char>(view.length(), view.data());
+}
+
+template <class T>
+const TCHAR* get_enum_name_tchar(T x)
+{
+    string_viewascii view = get_enum_name_<T, CPPNAMEOF_ENUM_MIN, CPPNAMEOF_ENUM_MAX>(x);
+    return to_utf8<TCHAR, char>(view.length(), view.data());
+}
+
 } // namespace cppnameof
-#endif // INC_CPPNAMEOF_H_
+

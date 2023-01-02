@@ -22,7 +22,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_DIRECTORY}")
 add_executable(${PROJECT_NAME} ${FILES})
 
 if(MSVC)
-    set(DEFAULT_CXX_FLAGS "/DWIN32 /D_WINDOWS /D_MSBC /W4 /WX- /nologo /fp:precise /arch:AVX2 /Zc:wchar_t /TP /Gd")
+    set(DEFAULT_CXX_FLAGS "/DWIN32 /D_WINDOWS /D_MSBC /W4 /WX- /nologo /fp:precise /arch:AVX2 /Zc:wchar_t /TP /Gd /std:c++17")
     if("1800" VERSION_LESS MSVC_VERSION)
         set(DEFAULT_CXX_FLAGS "${DEFAULT_CXX_FLAGS} /EHsc")
     endif()
