@@ -7,6 +7,8 @@
 
 namespace cppnameof
 {
+#define NAMEOF_API ENUMNAME_API
+
 #if 201703L <= __cplusplus || 1914<=_MSC_VER
 #    define CPPNAMEOF_ENABLED (1)
 using nameof_enum_enabled = std::true_type;
@@ -142,8 +144,8 @@ const std::array<string_viewascii, sizeof...(I)> enum_names<T, Min, std::integer
     enum_name<T, static_cast<T>(I+Min)>()...
 };
 
-template <class T, int32_t Min, int32_t Max>
-string_viewascii get_enum_name_(T x)
+template <class T, int32_t Min=CPPNAMEOF_ENUM_MIN, int32_t Max=CPPNAMEOF_ENUM_MAX>
+string_viewascii nameof_enum(T x)
 {
     static_assert(std::is_enum_v<T>, "T should be enum type.");
     static_assert((Min<=Max), "Min should be less than or equal to Max");
@@ -151,42 +153,26 @@ string_viewascii get_enum_name_(T x)
     return names[static_cast<int32_t>(x)-Min];
 }
 
-template <class T>
-string_viewascii get_enum_name(T x)
+template<class T>
+const T* to_utf8(int32_t size, const char* str);
+
+template<>
+NAMEOF_API const char* to_utf8<char>(int32_t size, const char* str);
+
+template<>
+NAMEOF_API const char16_t* to_utf8<char16_t>(int32_t size, const char* str);
+
+template<>
+NAMEOF_API const char32_t* to_utf8<char32_t>(int32_t size, const char* str);
+
+template<>
+NAMEOF_API const wchar_t* to_utf8<wchar_t>(int32_t size, const char* str);
+
+template <class T, int32_t Min=CPPNAMEOF_ENUM_MIN, int32_t Max=CPPNAMEOF_ENUM_MAX>
+const TCHAR* NAMEOF_ENUM_TCHAR(T x)
 {
-    return get_enum_name_<T, CPPNAMEOF_ENUM_MIN, CPPNAMEOF_ENUM_MAX>(x);
-}
-
-template<class T, class U>
-const T* to_utf8(int32_t size, const U* str);
-
-template<>
-const char* to_utf8<char, char>(int32_t size, const char* str);
-
-template<>
-const unsigned char* to_utf8<unsigned char, char>(int32_t size, const char* str);
-
-template<>
-const char16_t* to_utf8<char16_t, char>(int32_t size, const char* str);
-
-template<>
-const char32_t* to_utf8<char32_t, char>(int32_t size, const char* str);
-
-template<>
-const wchar_t* to_utf8<wchar_t, char>(int32_t size, const char* str);
-
-template <class T, int32_t Min, int32_t Max>
-const TCHAR* get_enum_name_tchar_(T x)
-{
-    string_viewascii view = get_enum_name_<T, Min, Max>(x);
-    return to_utf8<TCHAR, char>(view.length(), view.data());
-}
-
-template <class T>
-const TCHAR* get_enum_name_tchar(T x)
-{
-    string_viewascii view = get_enum_name_<T, CPPNAMEOF_ENUM_MIN, CPPNAMEOF_ENUM_MAX>(x);
-    return to_utf8<TCHAR, char>(view.length(), view.data());
+    string_viewascii view = nameof_enum<T, Min, Max>(x);
+    return to_utf8<TCHAR>(view.length(), view.data());
 }
 
 } // namespace cppnameof

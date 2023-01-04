@@ -3,19 +3,13 @@
 namespace cppnameof
 {
     template<>
-    const char* to_utf8<char, char>(int32_t, const char* str)
+    const char* to_utf8<char>(int32_t, const char* str)
     {
         return str;
     }
 
     template<>
-    const unsigned char* to_utf8<unsigned char, char>(int32_t, const char* str)
-    {
-        return reinterpret_cast<const unsigned char*>(str);
-    }
-
-    template<>
-    const char16_t* to_utf8<char16_t, char>(int32_t size, const char* str)
+    const char16_t* to_utf8<char16_t>(int32_t size, const char* str)
     {
 #if UE_BUILD_SHIPPING
         return u"";
@@ -31,7 +25,7 @@ namespace cppnameof
     }
 
     template<>
-    const char32_t* to_utf8<char32_t, char>(int32 size, const char* str)
+    const char32_t* to_utf8<char32_t>(int32 size, const char* str)
     {
 #if UE_BUILD_SHIPPING
         return U"";
@@ -47,7 +41,7 @@ namespace cppnameof
     }
 
     template<>
-    const wchar_t* to_utf8<wchar_t, char>(int32 size, const char* str)
+    const wchar_t* to_utf8<wchar_t>(int32 size, const char* str)
     {
 #if UE_BUILD_SHIPPING
         return TEXT("");

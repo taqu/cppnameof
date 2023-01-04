@@ -44,7 +44,7 @@ int main(void)
         std::cout << name << std::endl;
     }
     for(int32_t i = static_cast<int32_t>(Enum1::E0); i <= static_cast<int32_t>(Enum1::E1); ++i) {
-        auto&& name = get_enum_name_<Enum1, static_cast<int32_t>(Enum1::E0), static_cast<int32_t>(Enum1::E1)>(static_cast<Enum1>(i));
+        auto&& name = get_enum_name<Enum1, static_cast<int32_t>(Enum1::E0), static_cast<int32_t>(Enum1::E1)>(static_cast<Enum1>(i));
         if(name.length()<=0){
             continue;
         }
@@ -59,7 +59,7 @@ int main(void)
         std::cout << name << std::endl;
     }
     for(int32_t i = static_cast<int32_t>(Test::Enum1::E0); i <= static_cast<int32_t>(Test::Enum1::E1); ++i) {
-        auto&& name = get_enum_name_<Test::Enum1, static_cast<int32_t>(Test::Enum1::E0), static_cast<int32_t>(Test::Enum1::E1)>(static_cast<Test::Enum1>(i));
+        auto&& name = get_enum_name<Test::Enum1, static_cast<int32_t>(Test::Enum1::E0), static_cast<int32_t>(Test::Enum1::E1)>(static_cast<Test::Enum1>(i));
         if(name.length()<=0){
             continue;
         }

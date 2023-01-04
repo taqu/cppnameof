@@ -129,19 +129,13 @@ const std::array<string_viewascii, sizeof...(I)> enum_names<T, Min, std::integer
     enum_name<T, static_cast<T>(I+Min)>()...
 };
 
-template <class T, int32_t Min, int32_t Max>
-string_viewascii get_enum_name_(T x)
+template <class T, int32_t Min=CPPNAMEOF_ENUM_MIN, int32_t Max=CPPNAMEOF_ENUM_MAX>
+string_viewascii get_enum_name(T x)
 {
     static_assert(std::is_enum_v<T>, "T should be enum type.");
     static_assert((Min<=Max), "Min should be less than or equal to Max");
     static const auto& names = cppnameof::enum_names<T, Min, std::make_integer_sequence<int32_t, Max-Min+1>>::names_;
     return names[static_cast<int32_t>(x)-Min];
-}
-
-template <class T>
-string_viewascii get_enum_name(T x)
-{
-    return get_enum_name_<T, CPPNAMEOF_ENUM_MIN, CPPNAMEOF_ENUM_MAX>(x);
 }
 
 } // namespace cppnameof
